@@ -1,0 +1,8 @@
+.env
+
+.DS_Store
+
+/development/info.log
+/development/error.log
+
+/node_modules
