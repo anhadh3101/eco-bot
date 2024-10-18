@@ -1,1 +1,4 @@
 .DS_Store
+
+.env
+eco_bot_creds.json
