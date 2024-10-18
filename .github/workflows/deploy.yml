@@ -47,7 +47,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd projects/
-          mkdir test
           git pull origin main 
 
 
