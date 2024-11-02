@@ -1,0 +1,2 @@
+# Prevent from pushing keys onto git
+.env
