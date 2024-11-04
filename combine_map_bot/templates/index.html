@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>EcoBot Recycling Centers & Chat</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Styling for the map and chatbot */
+    body {
+      margin: 0;
+      font-family: 'Manrope', sans-serif;
+    }
+
+    #map {
+        height: 80vh;
+        width: 100%;
+    }
+
+    #controls {
+        padding: 10px;
+        background: #fff;
+        border: 1px solid #ccc;
+        margin-bottom: 10px;
+    }
+
+    /* Chatbox styling */
+    .chatbox {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 400px;
+      height: 400px;
+      background-color: #0a1128;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      z-index: 1000;
+    }
+
+    .chatbox-header {
+      background-color: #0044cc;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px 10px 0 0;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbox-body {
+      padding: 10px;
+      max-height: 280px;
+      overflow-y: auto;
+      flex-grow: 1;
+    }
+
+    .chatbox-footer {
+      padding: 10px;
+      display: flex;
+      gap: 5px;
+      margin-top: auto;
+    }
+
+    .chatbox-footer input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .chatbox-footer button {
+      background-color: #0044cc;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin: 10px 0;
+    }
+
+    .message p {
+      margin: 0;
+    }
+
+    .message.user {
+      text-align: right;
+    }
+
+    .message.user p {
+      background-color: #555;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .message.bot p {
+      background-color: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    #chat-toggle-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #0044cc;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 1000;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="controls">
+    <input type="text" id="locationInput" placeholder="Enter a location" />
+    <button onclick="searchLocation()">Search</button>
+    <label for="radiusInput">Search Radius (meters): </label>
+    <input type="number" id="radiusInput" value="5000" min="1000" step="1000" />
+    <button onclick="adjustRadius()">Update Radius</button>
+    <label for="travelMode">Travel Mode: </label>
+    <select id="travelMode" onchange="updateTravelMode()">
+      <option value="DRIVING">Driving</option>
+      <option value="WALKING">Walking</option>
+      <option value="BICYCLING">Bicycling</option>
+    </select>
+  </div>
+
+  <!-- Map Container -->
+  <div id="map"></div>
+
+  <!-- Toggle button for chatbot -->
+  <button id="chat-toggle-btn">💬</button>
+
+  <!-- Chatbox -->
+  <div class="chatbox" id="chatbox">
+    <div class="chatbox-header">
+      <h5>Chat Support</h5>
+      <button id="minimize-btn" style="background:none; border:none; color:white; font-size:16px;">−</button>
+    </div>
+    <div class="chatbox-body" id="chat-body">
+      <div class="message bot">
+        <p>Hello! How can I help you today?</p>
+      </div>
+    </div>
+    <div class="chatbox-footer">
+      <input type="text" id="chat-input" placeholder="Write a message...">
+      <button id="send-button">Send</button>
+    </div>
+  </div>
+
+  <!-- Google Maps and Places JavaScript API -->
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places"></script>
+  <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+
+  <script src="{{ url_for('static', filename='js/bot.js') }}"></script>
+  <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+</body>
+</html>
