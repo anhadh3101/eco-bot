@@ -5,28 +5,51 @@
   <meta charset="UTF-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EcoBot Recycling Centers & Chatbot</title>
 
-  <title>EcoBot Recycling Centers & Chat</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    /* Styling for the map and chatbot */
+    /* Basic styling */
     body {
       margin: 0;
       font-family: 'Manrope', sans-serif;
+      transition: background-color 0.3s, color 0.3s;
+      background-color: var(--map-bg-color);
+
     }
 
+    /* Styling for the map and controls */
+    #map-container {
+      padding: 20px;
+      transition: background-color 0.3s;
+    }
     #map {
-        height: 80vh;
-        width: 100%;
+      height: 80vh;
+      width: 100%;
     }
 
     #controls {
-        padding: 10px;
-        background: #fff;
-        border: 1px solid #ccc;
-        margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background: var(--controls-bg-color);
+      color: var(--controls-text-color);
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+
+    /* Dark Mode Toggle Button */
+    #dark-mode-toggle {
+      background-color: var(--toggle-btn-bg-color);
+      color: var(--toggle-btn-text-color);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      margin-left: auto;
+      cursor: pointer;
+      transition: background-color 0.3s;
     }
 
     /* Chatbox styling */
@@ -36,20 +59,21 @@
       right: 20px;
       width: 400px;
       height: 400px;
-      background-color: #0a1128;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: var(--chatbox-bg-color);
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
       display: none;
       flex-direction: column;
       justify-content: space-between;
       z-index: 1000;
+      transition: background-color 0.3s;
     }
 
     .chatbox-header {
-      background-color: #0044cc;
-      color: #fff;
-      padding: 10px;
-      border-radius: 10px 10px 0 0;
+      background: var(--chatbox-header-bg-color);
+      color: var(--chatbox-header-text-color);
+      padding: 12px;
+      border-radius: 15px 15px 0 0;
       text-align: center;
       display: flex;
       justify-content: space-between;
@@ -57,36 +81,43 @@
     }
 
     .chatbox-body {
-      padding: 10px;
+      padding: 15px;
       max-height: 280px;
       overflow-y: auto;
       flex-grow: 1;
+      background-color: var(--chatbox-body-bg-color);
+      color: var(--chatbox-text-color);
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .chatbox-footer {
       padding: 10px;
       display: flex;
       gap: 5px;
-      margin-top: auto;
+      background-color: var(--chatbox-footer-bg-color);
+      border-radius: 0 0 15px 15px;
     }
 
     .chatbox-footer input {
       flex: 1;
       padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
+      border: 1px solid #d1d8e0;
+      border-radius: 8px;
       outline: none;
+      background-color: var(--input-bg-color);
     }
 
     .chatbox-footer button {
-      background-color: #0044cc;
-      color: white;
+      background-color: var(--send-btn-bg-color);
+      color: var(--send-btn-text-color);
       border: none;
       padding: 10px 15px;
-      border-radius: 5px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
 
+    /* Message styling */
     .message {
       margin: 10px 0;
     }
@@ -100,32 +131,92 @@
     }
 
     .message.user p {
-      background-color: #555;
-      color: #fff;
+      background-color: var(--user-msg-bg-color);
+      color: var(--user-msg-text-color);
       padding: 5px 10px;
       border-radius: 10px;
       display: inline-block;
     }
 
     .message.bot p {
-      background-color: #333;
-      color: #fff;
+      background-color: var(--bot-msg-bg-color);
+      color: var(--bot-msg-text-color);
       padding: 5px 10px;
       border-radius: 10px;
       display: inline-block;
     }
 
+    /* Chat toggle button styling */
     #chat-toggle-btn {
       position: fixed;
       bottom: 20px;
       right: 20px;
-      background-color: #0044cc;
+      background-color: var(--chat-toggle-btn-bg-color);
       color: white;
       border: none;
       padding: 10px;
       border-radius: 50%;
       cursor: pointer;
       z-index: 1000;
+      transition: background-color 0.3s;
+    }
+
+    /* Placeholder text color */
+    #chat-input::placeholder {
+      color: var(--placeholder-color); /* Placeholder text color */
+      opacity: 0.7; /* Slightly faded for a subtle effect */
+    }
+
+    /* Light Mode Variables */
+    :root {
+      --bg-color: #f8f9fa;
+      --text-color: #333;
+      --map-bg-color: #e3f2fd;
+      --controls-bg-color: #ffffff;
+      --controls-text-color: #333;
+      --chatbox-bg-color: #f0f4f8;
+      --chatbox-header-bg-color: linear-gradient(135deg, #a29bfe, #74b9ff);
+      --chatbox-header-text-color: #fff;
+      --chatbox-body-bg-color: #f0f4f8;
+      --chatbox-footer-bg-color: #e3f2fd;
+      --chatbox-text-color: #333;
+      --input-bg-color: #ffffff;
+      --send-btn-bg-color: #4fc3f7;
+      --send-btn-text-color: #fff;
+      --toggle-btn-bg-color: darkblue;
+      --toggle-btn-text-color: #fff;
+      --user-msg-bg-color: #4dd0e1;
+      --user-msg-text-color: #ffffff;
+      --bot-msg-bg-color: #f1f8e9;
+      --bot-msg-text-color: #333;
+      --chat-toggle-btn-bg-color: #81d4fa;
+      --placeholder-color: #999;
+    }
+
+    /* Dark Mode Variables */
+    body.dark-mode {
+      --bg-color: #263238;
+      --text-color: #e0e0e0;
+      --map-bg-color: #37474f;
+      --controls-bg-color: #37474f;
+      --controls-text-color: #e0e0e0;
+      --chatbox-bg-color: #546e7a;
+      --chatbox-header-bg-color: #1e88e5;
+      --chatbox-header-text-color: #fff;
+      --chatbox-body-bg-color: #546e7a;
+      --chatbox-footer-bg-color: #607d8b;
+      --chatbox-text-color: #e0e0e0;
+      --input-bg-color: #607d8b;
+      --send-btn-bg-color: #1e88e5;
+      --send-btn-text-color: #ffffff;
+      --toggle-btn-bg-color: orange;
+      --toggle-btn-text-color: #ffffff;
+      --user-msg-bg-color: #29b6f6;
+      --user-msg-text-color: #ffffff;
+      --bot-msg-bg-color: #b0bec5;
+      --bot-msg-text-color: #263238;
+      --chat-toggle-btn-bg-color: #1e88e5;
+      --placeholder-color: #b0bec5;
     }
   </style>
 </head>
@@ -143,10 +234,14 @@
       <option value="WALKING">Walking</option>
       <option value="BICYCLING">Bicycling</option>
     </select>
+
+    <button id="dark-mode-toggle">🌙</button>
   </div>
 
   <!-- Map Container -->
-  <div id="map"></div>
+  <div id="map-container">
+    <div id="map"></div>
+  </div>
 
   <!-- Toggle button for chatbot -->
   <button id="chat-toggle-btn">💬</button>
@@ -158,9 +253,7 @@
       <button id="minimize-btn" style="background:none; border:none; color:white; font-size:16px;">−</button>
     </div>
     <div class="chatbox-body" id="chat-body">
-      <div class="message bot">
-        <p>Hello! How can I help you today?</p>
-      </div>
+      <div class="message bot"><p>Hello! How can I help you today?</p></div>
     </div>
     <div class="chatbox-footer">
       <input type="text" id="chat-input" placeholder="Write a message...">
@@ -174,5 +267,7 @@
 
   <script src="{{ url_for('static', filename='js/bot.js') }}"></script>
   <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
+  <script src="{{ url_for('static', filename='js/mode.js') }}"></script>
 </body>
 </html>
