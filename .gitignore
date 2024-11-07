@@ -2,3 +2,6 @@
 
 .env
 eco_bot_creds.json
+
+.idea
+.venv
