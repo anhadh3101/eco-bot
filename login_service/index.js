@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 
-import { getAuthUrl, getAccessToken } from './google_api/oauth2.js';
 import { checkLoginCreds, registerUser, decodeToken } from './login/login.js';
 import { fetchToken, saveTokens } from "./login/db_ops.js";
 import { logInfo, logError} from './development/logger.js';
@@ -47,16 +46,11 @@ app.post('/api/login', async (req, res) => {
         const jwtToken = await checkLoginCreds(email, password);
         logInfo(`User logged in with email: ${email}`);
         logInfo(`JWT for ${email}: ${jwtToken}`);
-        
-        // Generate and redirect to auth url
-        const authUrl = getAuthUrl();
-        const modUrl = `${authUrl}&state=${encodeURIComponent(jwtToken)}`;
-        logInfo(`Authorization URL for ${email} is ${modUrl}`);
-
+        console.log(`JWT for ${email}: ${jwtToken}`);
         res.cookie("TOKEN", jwtToken, { httpOnly: true, secure: false, sameSite: "Lax", maxAge: 3600000 });
         logInfo(`Cookie sent to user with email ${email}`);
 
-        res.status(200).json({ modUrl });
+        res.status(200).json({ jwtToken });
     } catch (error) {
         logError("Login Failed:", error);
         res.status(401).json({ message: 'Invalid email or password' });
@@ -66,31 +60,31 @@ app.post('/api/login', async (req, res) => {
 /*
 Callback to generate and save access tokens
 */
-app.get("/callback", async (req, res) => {
-    const { code, state } = req.query;
-    logInfo(`Callback for JWT: ${state}`);
+// app.get("/callback", async (req, res) => {
+//     const { code, state } = req.query;
+//     logInfo(`Callback for JWT: ${state}`);
 
-    try {
-        // Decode and get the email
-        const jwtToken = decodeURIComponent(state);
-        const decoded = decodeToken(jwtToken);
-        const email = decoded.email;
+//     try {
+//         // Decode and get the email
+//         const jwtToken = decodeURIComponent(state);
+//         // const decoded = decodeToken(jwtToken);
+//         // const email = decoded.email;
 
-        const tokens = await getAccessToken(code); // Handle callback and get tokens
-        logInfo(`Access tokens for ${email}: ${tokens}`);
+//         // const tokens = await getAccessToken(code); // Handle callback and get tokens
+//         // logInfo(`Access tokens for ${email}: ${tokens}`);
 
-        // Save tokens into the DB
-        await saveTokens(tokens, email);
-        logInfo(`Tokens saved for ${email}`);
-        logInfo(`Redirecting ${email} to REACT service`);
+//         // // Save tokens into the DB
+//         // await saveTokens(tokens, email);
+//         // logInfo(`Tokens saved for ${email}`);
+//         // logInfo(`Redirecting ${email} to REACT service`);
 
-        // Redirect back to the react service
-        res.redirect(`${REACT_HOST}/spreadsheets`);
-    } catch (error) {
-        logError("OAuth callback failed:", error);
-        res.redirect(`${REACT_HOST}`); // Handle errors and redirect to a fallback
-    }
-});
+//         // Redirect back to the react service
+//         res.redirect(`${REACT_HOST}/home`);
+//     } catch (error) {
+//         logError("OAuth callback failed:", error);
+//         res.redirect(`${REACT_HOST}`); // Handle errors and redirect to a fallback
+//     }
+// });
 
 /*
 API to sign up a new user

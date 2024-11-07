@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import mysql from 'mysql2/promise';
+import { MongoClient, ServerApiVersion} from 'mongodb';
 
 // Resolve the absolute path to config.json
 const configPath = path.join(process.cwd(), './config.json');
@@ -11,38 +11,52 @@ const rawData = fs.readFileSync(configPath);
 // Parse the JSON data
 const config = JSON.parse(rawData);
 
-// Create the connection pool using the database config
-const pool = mysql.createPool(config.db);
+const uri = `mongodb+srv://${config.user}:${config.password}@eco-bot-cluster.vrfg6.mongodb.net/?retryWrites=true&w=majority&appName=Eco-bot-cluster`;
 
-export async function insert(email, hashPassword, username) {
+// Create the connection pool using the database config
+const client = new MongoClient(uri, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+
+// Connect to MongoDB
+async function connectDB() {
+    if (!client.isConnected) {
+        await client.connect();
+    }
+    return client.db(config.dbName).collection(config.collectionName); // Replace with your dbName and collectionName from config
+}
+
+// Add a document to the collection
+export async function addItem(data) {
+    const collection = await connectDB();
     try {
-        const [result] = await pool.execute(
-            'INSERT INTO users (email, hash_password, username) VALUES (?, ?, ?)', 
-            [email, hashPassword, username]
-        );
-        console.log('User added successfully:', result);
+        const result = await collection.insertOne(data);
+        console.log('Document inserted:', result.insertedId);
+        return result.insertedId;
     } catch (error) {
-        throw error;
+        console.error('Error inserting document:', error);
     }
 }
 
-export async function retrieve(email) {
+// Get documents from the collection
+export async function getItems(query = {}) {
+    const collection = await connectDB();
     try {
-        const [rows] = await pool.execute(
-            'SELECT * FROM users WHERE email = ?',
-            [email]
-        );
-
-        if (rows.length === 0) {
-            throw new Error('User not found');
-        }
-
-        return rows[0];
-
+        const results = await collection.find(query).toArray();
+        console.log('Documents retrieved:', results);
+        return results;
     } catch (error) {
-        console.error('Error adding user:', error);
-        throw error;
+        console.error('Error retrieving documents:', error);
     }
+}
+
+// Close the connection
+export async function closeConnection() {
+    await client.close();
 }
 
 export async function saveTokens(tokens, email) {

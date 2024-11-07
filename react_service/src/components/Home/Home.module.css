@@ -1,43 +1,207 @@
-/* Home.module.css */
+/* Basic styling */
+body {
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: var(--map-bg-color);
 
-.home-container {
-    display: flex;
-    height: 100vh; /* Full height of the viewport */
-    background-color: #f7f9fc; /* Soft background color */
 }
 
-.sidebar {
-    width: 25%;
-    background-color: #fff; /* White background for clarity */
+/* Styling for the map and controls */
+#map-container {
     padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
-    border-right: 2px solid #e1e1e1; /* Separator line */
-    overflow-y: auto; /* Scroll if content overflows */
+    transition: background-color 0.3s;
 }
-
-.sidebar h2 {
-    margin-top: 0; /* Remove top margin */
-    color: #333; /* Dark text color */
-}
-
-.spreadsheet-viewer {
-    width: 75%;
-    padding: 20px;
-    display: flex;
-    flex-direction: column; /* Stack content vertically */
-    align-items: center; /* Center items horizontally */
-}
-
-.spreadsheet-viewer h2 {
-    margin-bottom: 20px; /* Space between title and iframe */
-    color: #333; /* Dark text color */
-}
-
-.spreadsheet-frame {
+#map {
+    height: 80vh;
     width: 100%;
-    height: 90%; /* Fill most of the right side */
-    border: none; /* Remove default border */
-    border-radius: 8px; /* Rounded corners for the iframe */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for the iframe */
-    background-color: #fff; /* Ensure iframe has a white background */
+}
+
+#controls {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background: var(--controls-bg-color);
+    color: var(--controls-text-color);
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+/* Dark Mode Toggle Button */
+#dark-mode-toggle {
+    background-color: var(--toggle-btn-bg-color);
+    color: var(--toggle-btn-text-color);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    margin-left: auto;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Chatbox styling */
+.chatbox {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 400px;
+    height: 400px;
+    background-color: var(--chatbox-bg-color);
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    z-index: 1000;
+    transition: background-color 0.3s;
+}
+
+.chatbox-header {
+    background: var(--chatbox-header-bg-color);
+    color: var(--chatbox-header-text-color);
+    padding: 12px;
+    border-radius: 15px 15px 0 0;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chatbox-body {
+    padding: 15px;
+    max-height: 280px;
+    overflow-y: auto;
+    flex-grow: 1;
+    background-color: var(--chatbox-body-bg-color);
+    color: var(--chatbox-text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.chatbox-footer {
+    padding: 10px;
+    display: flex;
+    gap: 5px;
+    background-color: var(--chatbox-footer-bg-color);
+    border-radius: 0 0 15px 15px;
+}
+
+.chatbox-footer input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #d1d8e0;
+    border-radius: 8px;
+    outline: none;
+    background-color: var(--input-bg-color);
+}
+
+.chatbox-footer button {
+    background-color: var(--send-btn-bg-color);
+    color: var(--send-btn-text-color);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Message styling */
+.message {
+    margin: 10px 0;
+}
+
+.message p {
+    margin: 0;
+}
+
+.message.user {
+    text-align: right;
+}
+
+.message.user p {
+    background-color: var(--user-msg-bg-color);
+    color: var(--user-msg-text-color);
+    padding: 5px 10px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.message.bot p {
+    background-color: var(--bot-msg-bg-color);
+    color: var(--bot-msg-text-color);
+    padding: 5px 10px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+/* Chat toggle button styling */
+#chat-toggle-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--chat-toggle-btn-bg-color);
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s;
+}
+
+/* Placeholder text color */
+#chat-input::placeholder {
+    color: var(--placeholder-color); /* Placeholder text color */
+    opacity: 0.7; /* Slightly faded for a subtle effect */
+}
+
+/* Light Mode Variables */
+:root {
+    --bg-color: #f8f9fa;
+    --text-color: #333;
+    --map-bg-color: #e3f2fd;
+    --controls-bg-color: #ffffff;
+    --controls-text-color: #333;
+    --chatbox-bg-color: #f0f4f8;
+    --chatbox-header-bg-color: linear-gradient(135deg, #a29bfe, #74b9ff);
+    --chatbox-header-text-color: #fff;
+    --chatbox-body-bg-color: #f0f4f8;
+    --chatbox-footer-bg-color: #e3f2fd;
+    --chatbox-text-color: #333;
+    --input-bg-color: #ffffff;
+    --send-btn-bg-color: #4fc3f7;
+    --send-btn-text-color: #fff;
+    --toggle-btn-bg-color: darkblue;
+    --toggle-btn-text-color: #fff;
+    --user-msg-bg-color: #4dd0e1;
+    --user-msg-text-color: #ffffff;
+    --bot-msg-bg-color: #f1f8e9;
+    --bot-msg-text-color: #333;
+    --chat-toggle-btn-bg-color: #81d4fa;
+    --placeholder-color: #999;
+}
+
+/* Dark Mode Variables */
+body.dark-mode {
+    --bg-color: #263238;
+    --text-color: #e0e0e0;
+    --map-bg-color: #37474f;
+    --controls-bg-color: #37474f;
+    --controls-text-color: #e0e0e0;
+    --chatbox-bg-color: #546e7a;
+    --chatbox-header-bg-color: #1e88e5;
+    --chatbox-header-text-color: #fff;
+    --chatbox-body-bg-color: #546e7a;
+    --chatbox-footer-bg-color: #607d8b;
+    --chatbox-text-color: #e0e0e0;
+    --input-bg-color: #607d8b;
+    --send-btn-bg-color: #1e88e5;
+    --send-btn-text-color: #ffffff;
+    --toggle-btn-bg-color: orange;
+    --toggle-btn-text-color: #ffffff;
+    --user-msg-bg-color: #29b6f6;
+    --user-msg-text-color: #ffffff;
+    --bot-msg-bg-color: #b0bec5;
+    --bot-msg-text-color: #263238;
+    --chat-toggle-btn-bg-color: #1e88e5;
+    --placeholder-color: #b0bec5;
 }

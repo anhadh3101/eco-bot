@@ -35,7 +35,7 @@ const Login = () => {
             const data = await response.json();
 
             console.log(data)
-            window.location.href = data.modUrl;
+            window.location.href = "http://127.0.0.1:5000/api/home";
             
             setEmail('');
             setPassword('');
