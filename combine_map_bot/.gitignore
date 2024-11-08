@@ -2,4 +2,4 @@
 .env
 
 # Prevent from pushing python environment onto git
-.venv
+venv

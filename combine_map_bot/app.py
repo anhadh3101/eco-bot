@@ -10,23 +10,32 @@ BOT_API_KEY = os.getenv("BOT_API_KEY")
 MAP_API_KEY = os.getenv("MAP_API_KEY")
 
 genai.configure(api_key=BOT_API_KEY)
+model = genai.GenerativeModel('gemini-pro')
 app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)
 
+app = Flask(__name__)
+
 @app.route('/api/home', methods=['POST', 'GET'])
 def index():
-    if request.method == 'POST':
-        prompt = request.form['prompt']
-        try:
-            response = genai.GenerativeModel('gemini-pro').generate_content(prompt)
-            return response.text if response.text else "Sorry, I don't have an answer."
-        except Exception:
-            return "Error: Gemini is unavailable."
     try:
-        print("hello")
+        # Implement authentication
+        #
+        #
         return render_template('index.html', api_key=MAP_API_KEY)
     except Exception as e:  
         return str(e), 500
 
+@app.route('/message', methods=['POST'])
+def message():
+    try:  
+        if request.method == 'POST':
+            prompt = request.form['prompt']
+            response = model.generate_content(prompt)
+            return response.text if response.text else "Sorry, I don't have an answer."
+    except Exception:
+        print("Error: Gemini is unavailable.")
+        return "Error: Gemini is unavailable.", 500
+        
 if __name__ == '__main__':
     app.run(host="127.0.0.1", port=5000, debug=True)

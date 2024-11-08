@@ -29,8 +29,8 @@ sendButton.addEventListener('click', () => {
 
     // Send request to server via AJAX
     $.ajax({
-      type: 'POST',
-      url: '/', // The POST request to the Flask server
+      method: 'POST',
+      url: '/message', // The POST request to the Flask server
       data: { prompt: userInput },
       success: function (data) {
         // Append bot response
