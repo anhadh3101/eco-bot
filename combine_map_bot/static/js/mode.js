@@ -30,5 +30,12 @@ detectColorScheme();
 
 // add event listener to the dark mode button toggle
 document.getElementById('dark-mode-toggle').addEventListener('click', () => {
-    localStorage.getItem('theme') === 'light' ? enableDarkMode() : disableDarkMode();
+    const darkModeToggleBtn = document.getElementById('dark-mode-toggle');
+    if (localStorage.getItem('theme') === 'light') {
+        enableDarkMode();
+        darkModeToggleBtn.textContent = '🌞';
+    } else {
+        disableDarkMode();
+        darkModeToggleBtn.textContent = '🌙';
+    }
 });

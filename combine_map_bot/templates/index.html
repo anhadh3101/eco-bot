@@ -218,6 +218,13 @@
       --chat-toggle-btn-bg-color: #1e88e5;
       --placeholder-color: #b0bec5;
     }
+
+    /* File Upload Icon Styling */
+    .file-upload-label {
+      cursor: pointer;
+      margin: 0 5px;
+      font-size: 30px;
+    }
   </style>
 </head>
 
@@ -257,6 +264,8 @@
     </div>
     <div class="chatbox-footer">
       <input type="text" id="chat-input" placeholder="Write a message...">
+      <label for="file-upload" class="file-upload-label">📁</label>
+      <input type="file" id="file-upload" style="display: none;" accept="image/*">
       <button id="send-button">Send</button>
     </div>
   </div>
