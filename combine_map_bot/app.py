@@ -12,7 +12,7 @@ BOT_API_KEY = os.getenv("BOT_API_KEY")
 MAP_API_KEY = os.getenv("MAP_API_KEY")
 
 # MongoDB Atlas Connection String
-MONGO_URI="mongodb+srv://<user>:2<password>@eco-bot-cluster.vrfg6.mongodb.net/?retryWrites=true&w=majority&appName=Eco-bot-cluster"
+MONGO_URI = os.getenv("MONGO_URI")
 
 # Configure Google Generative AI
 genai.configure(api_key=BOT_API_KEY)
