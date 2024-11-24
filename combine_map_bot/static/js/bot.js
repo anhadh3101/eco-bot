@@ -100,7 +100,12 @@ sendButton.addEventListener('click', () => {
 
         // Append bot response to chat UI
         const botMessage = `<div class="message bot"><p>${data.bot_response}</p></div>`;
-        chatBody.innerHTML += botMessage;
+        
+        function replaceWithUpper(str) {
+          return str.replace(/\*(.*?)\*\*/g, (match, word) => word.toUpperCase());
+        }
+
+        chatBody.innerHTML += replaceWithUpper(botMessage).replace(/\*\*/g, '\*').replace(/\*/g, '<br>');
         chatBody.scrollTop = chatBody.scrollHeight;
 
         // Optional: Log success for debugging
