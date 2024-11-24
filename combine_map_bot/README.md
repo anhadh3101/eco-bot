@@ -7,7 +7,7 @@
 ```terminal
 BOT_API_KEY="Put_your_API_here"
 MAP_API_KEY="Put_your_API_here"
-MONGO_URI="mongodb+srv://<user>:2<password>@eco-bot-cluster.vrfg6.mongodb.net/?retryWrites=true&w=majority&appName=Eco-bot-cluster"
+MONGO_URI="mongodb+srv://<user>:<password>@eco-bot-cluster.vrfg6.mongodb.net/?retryWrites=true&w=majority&appName=Eco-bot-cluster"
 ```
 
 2. Create a `uploads` folder to contain the uploaded image from the users
