@@ -1,10 +1,12 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, jsonify
 import google.generativeai as genai
+from pymongo import MongoClient
+from datetime import datetime
 from dotenv import load_dotenv
 import os
 from flask_cors import CORS
 
-# Load environment variables
+# Load environment variables from .env file
 load_dotenv()
 BOT_API_KEY = os.getenv("BOT_API_KEY")
 MAP_API_KEY = os.getenv("MAP_API_KEY")
