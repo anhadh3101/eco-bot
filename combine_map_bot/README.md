@@ -2,11 +2,12 @@
 
 ## Steps to run
 
-1. Create a `.env` file and add [bot API key](https://aistudio.google.com/app/apikey) & [map API key](https://mapsplatform.google.com/) into it
+1. Create a `.env` file and add [bot API key](https://aistudio.google.com/app/apikey), [map API key](https://mapsplatform.google.com/) & MONGO_URI into it
 
 ```terminal
 BOT_API_KEY="Put_your_API_here"
 MAP_API_KEY="Put_your_API_here"
+MONGO_URI="mongodb+srv://<username>:<password>@<cluster-address>/<database>?retryWrites=true&w=majority"
 ```
 
 2. Create a `uploads` folder to contain the uploaded image from the users
@@ -28,3 +29,7 @@ pip install -r requirements.txt
 ```terminal
 python app.py
 ```
+
+6. Open your browser and navigate to:
+
+http://127.0.0.1:5000/
