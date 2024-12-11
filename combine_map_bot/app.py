@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, request
 import google.generativeai as genai
 from pymongo import MongoClient
 from datetime import datetime
 from dotenv import load_dotenv
+from PIL import Image
+import pytesseract
 import os
 from flask_cors import CORS
 
@@ -26,6 +28,7 @@ messages_collection = db['messages']  # Use 'messages' collection
 # Initialize Flask app
 app = Flask(__name__)
 CORS(app, origins="*", supports_credentials=True)
+app.config['UPLOAD_FOLDER'] = 'uploads'
 
 # Home Route
 @app.route('/', methods=['GET'])
@@ -42,11 +45,36 @@ def message():
     try:
         # Extract the user prompt
         prompt = request.form.get('prompt', '').strip()
+        
         if not prompt:
             return jsonify({"error": "Prompt is required"}), 400
+        
+        # Check for image
+        if 'image' in request.files:
+            file = request.files['image']
+            if file.filename == '':
+                return "Error: No selected file."
 
+            if file:
+                # Save the image file
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+                file.save(file_path)
+
+                try:
+                    # Process the image using OCR (Optical Character Recognition)
+                    with Image.open(file_path) as img:
+                        extracted_text = pytesseract.image_to_string(img)
+
+                        # Combine the extracted text with the prompt if both exist
+                        if extracted_text.strip():
+                            prompt = f"{prompt}\n\nImage content: {extracted_text}" if prompt else f"Image content: {extracted_text}"
+                        else:
+                            return "No text found in the image."
+                except Exception as e:
+                    return f"Error processing image: {str(e)}"
+        
         # Generate a bot response
-        response = model.generate_content(prompt)
+        response = genai.GenerativeModel('gemini-pro').generate_content(prompt)
         bot_response = response.text if response.text else "Sorry, I don't have an answer."
 
         # Log the interaction
