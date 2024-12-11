@@ -1,41 +1,63 @@
-// helper functions to toggle dark mode
 function enableDarkMode() {
-    document.body.classList.add('dark-mode');
+    document.documentElement.setAttribute('data-theme', 'dark');
     localStorage.setItem('theme', 'dark');
 }
 
 function disableDarkMode() {
-    document.body.classList.remove('dark-mode');
+    document.documentElement.setAttribute('data-theme', 'light');
     localStorage.setItem('theme', 'light');
 }
 
-// determines a new users dark mode preferences
+function updateDarkModeButton() {
+    const darkModeToggleBtn = document.getElementById('dark-mode-toggle');
+    if (localStorage.getItem('theme') === 'dark') {
+        darkModeToggleBtn.textContent = '🌞';
+    } else {
+        darkModeToggleBtn.textContent = '🌙';
+    }
+}
+
+function toggleTheme() {
+    if (localStorage.getItem('theme') === 'light' || !localStorage.getItem('theme')) {
+        enableDarkMode();
+    } else {
+        disableDarkMode();
+    }
+    updateDarkModeButton();
+
+    // If map.js has applyTheme function, call it:
+    if (typeof applyTheme === 'function') {
+        applyTheme();
+    }
+
+    // If a route is selected, update it to reflect info window styling
+    if (typeof selectedRecyclingCenter !== 'undefined' && selectedRecyclingCenter) {
+        updateRoute();
+    }
+}
+
 function detectColorScheme() {
     let theme = 'light';
 
-    // check localStorage for a saved 'theme' variable. if it's there, apply the saved theme
     if (localStorage.getItem('theme')) {
         theme = localStorage.getItem('theme');
-    }
-    // if not found, use the browser preference if available
-    else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         theme = 'dark';
     }
 
-    theme === 'dark' ? enableDarkMode() : disableDarkMode();
-}
-
-// run on page load
-detectColorScheme();
-
-// add event listener to the dark mode button toggle
-document.getElementById('dark-mode-toggle').addEventListener('click', () => {
-    const darkModeToggleBtn = document.getElementById('dark-mode-toggle');
-    if (localStorage.getItem('theme') === 'light') {
+    if (theme === 'dark') {
         enableDarkMode();
-        darkModeToggleBtn.textContent = '🌞';
     } else {
         disableDarkMode();
-        darkModeToggleBtn.textContent = '🌙';
     }
+
+    updateDarkModeButton();
+}
+
+// On page load
+detectColorScheme();
+
+// Add event listener to the dark mode button toggle
+document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+    toggleTheme();
 });

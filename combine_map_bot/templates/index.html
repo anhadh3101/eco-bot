@@ -1,62 +1,108 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EcoBot Recycling Centers & Chatbot</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     /* Basic styling */
     body {
       margin: 0;
       font-family: 'Manrope', sans-serif;
-      transition: background-color 0.3s, color 0.3s;
       background-color: var(--map-bg-color);
-
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
     }
 
-    /* Styling for the map and controls */
-    #map-container {
-      padding: 20px;
-      transition: background-color 0.3s;
-    }
     #map {
-      height: 80vh;
+      height: 100vh;
       width: 100%;
     }
 
-    #controls {
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      background: var(--controls-bg-color);
-      color: var(--controls-text-color);
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
+    /* Map controls styling */
+    .map-controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      background: var(--card-background);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      width: 320px;
     }
 
-    /* Dark Mode Toggle Button */
-    #dark-mode-toggle {
-      background-color: var(--toggle-btn-bg-color);
-      color: var(--toggle-btn-text-color);
-      border: none;
-      padding: 8px 16px;
-      border-radius: 5px;
-      margin-left: auto;
+    .map-controls h3 {
+      margin: 0 0 15px;
+      font-size: 18px;
+      font-weight: 500;
+      text-align: center;
+      color: var(--button-background);
+    }
+
+    .map-controls label {
+      font-size: 14px;
+      margin-bottom: 5px;
+      display: block;
+      color: var(--text-color);
+    }
+
+    .map-controls input,
+    .map-controls select,
+    .map-controls button {
+      display: block;
+      width: 100%;
+      margin-bottom: 12px;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid var(--card-border);
+      border-radius: 4px;
+      background: var(--card-background);
+      color: var(--text-color);
+    }
+
+    .map-controls button {
+      background-color: var(--button-background);
+      color: var(--button-text);
       cursor: pointer;
-      transition: background-color 0.3s;
+    }
+
+    .map-controls button:hover {
+      background-color: var(--button-hover);
+    }
+
+    /* Theme toggle container (separate from map-controls) */
+    .theme-toggle-container {
+      position: absolute;
+      top: 10px;
+      right: 60px;
+      z-index: 1001;
+      background: var(--card-background);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+    }
+
+    .theme-toggle-container label {
+      margin-left: 5px;
+      font-size: 14px;
+      color: var(--text-color);
     }
 
     /* Chatbox styling */
     .chatbox {
       position: fixed;
       bottom: 20px;
-      right: 20px;
+      right: 60px;
       width: 400px;
       height: 400px;
       background-color: var(--chatbox-bg-color);
@@ -150,7 +196,7 @@
     #chat-toggle-btn {
       position: fixed;
       bottom: 20px;
-      right: 20px;
+      right: 60px;
       background-color: var(--chat-toggle-btn-bg-color);
       color: white;
       border: none;
@@ -163,13 +209,20 @@
 
     /* Placeholder text color */
     #chat-input::placeholder {
-      color: var(--placeholder-color); /* Placeholder text color */
-      opacity: 0.7; /* Slightly faded for a subtle effect */
+      color: var(--placeholder-color);
+      opacity: 0.7;
     }
 
-    /* Light Mode Variables */
+    /* File Upload Icon Styling */
+    .file-upload-label {
+      cursor: pointer;
+      margin: 0 5px;
+      font-size: 30px;
+    }
+
     :root {
-      --bg-color: #f8f9fa;
+      /* Light Mode Variables */
+      --bg-color: #f9f9f9;
       --text-color: #333;
       --map-bg-color: #e3f2fd;
       --controls-bg-color: #ffffff;
@@ -191,10 +244,18 @@
       --bot-msg-text-color: #333;
       --chat-toggle-btn-bg-color: #81d4fa;
       --placeholder-color: #999;
+      --card-background: #fff;
+      --card-border: #ddd;
+      --button-background: #007BFF;
+      --button-hover: #0056b3;
+      --button-text: #fff;
+      --info-window-background: #fff;
+      --info-window-text: #333;
+      --info-window-border: #ddd;
     }
 
-    /* Dark Mode Variables */
-    body.dark-mode {
+    [data-theme="dark"] {
+      /* Dark Mode Variables */
       --bg-color: #263238;
       --text-color: #e0e0e0;
       --map-bg-color: #37474f;
@@ -208,46 +269,60 @@
       --chatbox-text-color: #e0e0e0;
       --input-bg-color: #607d8b;
       --send-btn-bg-color: #1e88e5;
-      --send-btn-text-color: #ffffff;
+      --send-btn-text-color: #fff;
       --toggle-btn-bg-color: orange;
-      --toggle-btn-text-color: #ffffff;
+      --toggle-btn-text-color: #fff;
       --user-msg-bg-color: #29b6f6;
-      --user-msg-text-color: #ffffff;
+      --user-msg-text-color: #fff;
       --bot-msg-bg-color: #b0bec5;
       --bot-msg-text-color: #263238;
       --chat-toggle-btn-bg-color: #1e88e5;
       --placeholder-color: #b0bec5;
-    }
-
-    /* File Upload Icon Styling */
-    .file-upload-label {
-      cursor: pointer;
-      margin: 0 5px;
-      font-size: 30px;
+      --card-background: #2c2c2c;
+      --card-border: #444;
+      --button-background: #5757ff;
+      --button-hover: #4343ff;
+      --button-text: #e0e0e0;
+      --info-window-background: #2c2c2c;
+      --info-window-text: #e0e0e0;
+      --info-window-border: #444;
     }
   </style>
 </head>
 
 <body>
-  <div id="controls">
-    <input type="text" id="locationInput" placeholder="Enter a location" />
+  <div id="map"></div>
+
+  <div class="map-controls">
+    <h3>EcoBot Recycling Search</h3>
+    <label for="locationInput">Search Location:</label>
+    <input type="text" id="locationInput" placeholder="Enter a location">
     <button onclick="searchLocation()">Search</button>
-    <label for="radiusInput">Search Radius (meters): </label>
-    <input type="number" id="radiusInput" value="5000" min="1000" step="1000" />
+
+    <label for="radiusInput">Search Radius (meters):</label>
+    <input type="number" id="radiusInput" value="5000" min="1000" step="1000">
     <button onclick="adjustRadius()">Update Radius</button>
-    <label for="travelMode">Travel Mode: </label>
+
+    <label for="travelMode">Travel Mode:</label>
     <select id="travelMode" onchange="updateTravelMode()">
       <option value="DRIVING">Driving</option>
       <option value="WALKING">Walking</option>
       <option value="BICYCLING">Bicycling</option>
     </select>
 
-    <button id="dark-mode-toggle">🌙</button>
+    <label for="centerType">Filter by Recycling Center Type:</label>
+    <select id="centerType" onchange="filterRecyclingCenters()">
+      <option value="">All</option>
+      <option value="glass">Glass</option>
+      <option value="plastic">Plastic</option>
+      <option value="electronics">Electronics</option>
+      <option value="metal">Metal</option>
+    </select>
   </div>
 
-  <!-- Map Container -->
-  <div id="map-container">
-    <div id="map"></div>
+  <!-- Separate theme toggle container -->
+  <div class="theme-toggle-container">
+    <button id="dark-mode-toggle">🌙</button>
   </div>
 
   <!-- Toggle button for chatbot -->
@@ -272,11 +347,11 @@
 
   <!-- Google Maps and Places JavaScript API -->
   <script src="https://maps.googleapis.com/maps/api/js?key={{ api_key }}&libraries=places"></script>
-  <script src="{{ url_for('static', filename='js/map.js')}}"></script>
-
-  <script src="{{ url_for('static', filename='js/bot.js') }}"></script>
   <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
 
+  <!-- Separate JS files -->
+  <script src="{{ url_for('static', filename='js/map.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/bot.js') }}"></script>
   <script src="{{ url_for('static', filename='js/mode.js') }}"></script>
 </body>
 </html>
