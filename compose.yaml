@@ -1,0 +1,7 @@
+version: '3.8'
+
+services:
+  map_serivce:
+    build: ./combine_map_bot
+    ports:
+      - "8081:8081"

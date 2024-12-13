@@ -1,0 +1,6 @@
+# Prevent from pushing keys onto git
+.env
+
+# Prevent from pushing python environment onto git
+venv
+uploads/

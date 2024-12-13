@@ -1,0 +1,6 @@
+{
+    "user": "tmp_user",
+    "password": "test123",
+    "dbName": "eco_bot_db",
+    "collectionName": "users"
+}
